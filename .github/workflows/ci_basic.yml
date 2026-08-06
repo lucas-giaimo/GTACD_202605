@@ -17,6 +17,7 @@ jobs:
           cd app
           chmod +x check_app.sh
           ./check_app.sh
+          echo ${{ secrets.FAKE_API_TOKEN }}
 
       - name: Display index.html content
         run: cat app/index.html
