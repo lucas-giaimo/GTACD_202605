@@ -1,5 +1,5 @@
 ---
-- name: Déploiement de l'application web
+- name: Déploiement de l'aplication web
   hosts: all
   become: yes
   tasks:
