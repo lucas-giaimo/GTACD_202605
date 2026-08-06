@@ -1,0 +1,53 @@
+name: CI/CD Full Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    name: Build and Test Application
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Run application check script
+        run: |
+          cd app
+          chmod +x check_app.sh
+          ./check_app.sh
+
+      - name: Display index.html content
+        run: cat app/index.html
+
+  deploy:
+    name: Deploy with Ansible
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Create Ansible inventory file
+        run: |
+          echo "${{ secrets.SERVER_IP }} ansible_user=${{ secrets.SERVER_USER }} ansible_ssh_common_args='-o StrictHostKeyChecking=no'" > inventory.ini
+          chmod 600 inventory.ini
+
+      - name: Install Ansible
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ansible
+
+      - name: Run Ansible Playbook
+        env:
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+        run: |
+          ansible-playbook -i inventory.ini ansible/deploy.yml
