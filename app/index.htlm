@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Team Cecile</title>
+</head>
+    <body>
+        <p>Edition via github Action, le CI/CD c'est trop bien !</p>
+    </body>
+</html>
