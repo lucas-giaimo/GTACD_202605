@@ -24,7 +24,7 @@ jobs:
         run: cat app/index.html
 
   deploy:
-    name: Deploy with Ansible
+    name: Deploy with Ansible v1
     runs-on: self-hosted
     needs: build-and-test
     steps:
